@@ -1,0 +1,23 @@
+Maximum subarray product problem
+
+The approach is very similar to Kadane's algo. At any point, the max product is one of the 3 ie the max product upto that point times the array element, min product upto that point times the array element and the array element itself. We are using the same approach here.
+
+
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int max_here=1;
+        int min_here=1;
+        int max_val=nums[0];
+        int n=nums.size();
+        for(int i=0;i<n;i++){
+            int temp=max_here;
+            max_here=max({max_here*nums[i], min_here*nums[i], nums[i]});
+            min_here=min({min_here*nums[i], temp*nums[i], nums[i]});
+            max_val=max(max_here, max_val);
+            //printf("%d:%d:%d\n",max_here,min_here,max_val);
+        }
+        return max_val;
+    }
+};
