@@ -1,0 +1,57 @@
+Robbery problem
+
+Recursive approach:
+At each index, find out what happens if that index is included and then if that index is not included.
+
+class Solution {
+public:
+    int Util(vector<int>nums, int sum, int &maxsum, int i){
+        int n=nums.size();
+        cout<<i<<" "<<sum<<"\n";
+        if(i>=n) return sum;
+        //int t=sum;
+        //sum+=nums[i];
+        int n1=Util(nums, sum+nums[i], maxsum, i+2);
+        //int n2=Util(nums, sum, maxsum, i+3);
+        int n2=Util(nums,sum,maxsum,i+1);
+        cout<<n1<<";"<<n2<<"\n";
+        sum= max(n1,n2);
+        if(sum>maxsum) cout<<sum<<":"<<maxsum<<"\n";
+        maxsum = max(sum, maxsum);
+        return sum;
+    }
+    int rob(vector<int>& nums) {
+        int sum=0;
+        int maxsum=0;
+        int data=Util(nums, sum, maxsum, 0);
+        cout<<data;
+        return maxsum;
+    }
+};
+Time complexity: O(2^n)
+
+DP Based solution:
+
+Keep on storing the max values by including a particular house and not including a particular house.
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+      int n=nums.size();
+      int dp[n][2];
+      memset(dp, 0, sizeof(dp));
+      dp[0][1]=nums[0];
+      for(int i=1;i<n;i++){
+          int max_val=0;
+          for(int j=0;j<i-1;j++){
+              max_val=max(max_val, max(dp[j][0], dp[j][1]));
+
+          }
+          dp[i][1]=max_val+nums[i];
+          dp[i][0]=max(max_val, dp[i-1][1]);
+
+      }
+      return max(dp[n-1][0], dp[n-1][1]);  
+    }
+};
+Time complexity: O(n^2) Space complexity : O(n)
