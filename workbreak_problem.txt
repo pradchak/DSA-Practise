@@ -1,0 +1,66 @@
+WordBreak Problem: Recursion approach
+
+1) Split the word into 2 parts based on a pivot.
+2)Check if the first part exists in a dictionary and recursively do that for the next part.
+3)If both come out to be true, return true.
+4)Else, select a new pivot point and recur for the entire word.
+class Solution {
+public:
+    bool findWord(vector<string>wordDict, string data){
+        if(find(wordDAict.begin(), wordDict.end(),data)!=wordDict.end()){
+            return true;
+        }
+        return false;
+    }
+    bool Util(string s,vector<string>dict,int i){
+        int n=s.size();
+        if(findWord(dict, s)) return true;
+        if(i==n) return false;
+        //if(s=="") return true;
+        string s1=s.substr(0,i+1);
+        string s2=s.substr(i+1,n-i);
+        cout<<s1<<" "<<s2<<" "<<i<<"\n";
+        if(findWord(dict,s1) and Util(s2,dict,0)) return true;
+        return Util(s,dict,i+1);
+    }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        return Util(s,wordDict,0);
+    }
+};
+
+DP solution with provided prints for testing
+
+class Solution {
+public:
+    bool findWord(vector<string>dict, string s){
+        if(find(dict.begin(), dict.end(),s)!=dict.end()) return true;
+        return false;
+    }
+    bool wordBreak(string s, vector<string>& dict) {
+        int n=s.size();
+        int dp[n][n];
+        memset(dp, false, sizeof(dp));
+        for(int i=0;i<n;i++){
+            string s1=s.substr(0,i+1);
+            if(!dp[0][i]) dp[0][i]=findWord(dict, s1);
+            if(dp[0][i]){
+                cout<<"Matched "<<s.substr(0,i+1)<<"\n";
+                for(int j=i+1;j<n;j++){
+                    //cout<<s.substr(i+1,j-i+1)<<"\n";
+                    if(!dp[i+1][j])dp[i+1][j]=findWord(dict, s.substr(i+1,j-i));
+                    if(dp[i+1][j]){
+                        cout<<s.substr(i+1,j-i+1)<<"\n"; 
+                        dp[0][j]=true;
+                    }
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                cout<<dp[i][j]<<" ";
+            }
+            cout<<"\n";
+        }
+        return dp[0][n-1];
+    }
+};
