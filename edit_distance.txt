@@ -1,0 +1,67 @@
+Edit Distance Problem
+Recursive Approach:
+If 2 characters are equal, then proceed ahead with the remaining group of characters. Else increase the count of the local variable(to keep a track of the local count for this iteration) and test it for all the 3 cases ie deletion, insertion and replacement. Also, keep a variable for keeping track of the global minimum count.
+
+class Solution {
+public:
+    long Util(string s1, string s2, long &mincount, long count, int i, int j){
+        cout<<i<<" "<<j<<" "<<count<<"\n";
+        //if(s1==s2) return count;
+        int a=s1.size();
+        int b=s2.size();
+        if(i==a or j==b) return abs((a-j)-(b-i));
+        if(s1[i]==s2[j]){
+            int x=Util(s1,s2,mincount,count,i+1,j+1);
+            mincount=min(mincount,(count+x));
+            count+=x;
+            return count;
+        }
+        if(s1[i]!=s2[j]) count++;
+        int n1=Util(s1,s2,mincount,count,i+1,j);
+        int n2=Util(s1,s2,mincount,count,i,j+1);
+        int n3=Util(s1,s2,mincount,count,i+1,j+1);
+        count=min(n1,min(n2,n3));
+        mincount=min(count, mincount);
+        return count;
+    }
+    int minDistance(string s1, string s2) {
+        long mincount=INT_MAX;
+        long data=Util(s1,s2,mincount,0,0,0);
+        return mincount;
+    }
+};
+
+DP Based approach:
+
+Keep an array that will keep a track of all the characters and the minimum values upto a certain point as mentioned in the recursion approach.
+
+class Solution {
+public:
+    long Util(string s1, string s2, long &mincount, long count, int i, int j){
+        cout<<i<<" "<<j<<" "<<count<<"\n";
+        //if(s1==s2) return count;
+        int a=s1.size();
+        int b=s2.size();
+        if(i==a or j==b) return abs((a-j)-(b-i));
+        if(s1[i]==s2[j]){
+            int x=Util(s1,s2,mincount,count,i+1,j+1);
+            mincount=min(mincount,(count+x));
+            count+=x;
+            return count;
+        }
+        if(s1[i]!=s2[j]) count++;
+        int n1=Util(s1,s2,mincount,count,i+1,j);
+        int n2=Util(s1,s2,mincount,count,i,j+1);
+        int n3=Util(s1,s2,mincount,count,i+1,j+1);
+        count=min(n1,min(n2,n3));
+        mincount=min(count, mincount);
+        return count;
+    }
+    int minDistance(string s1, string s2) {
+        long mincount=INT_MAX;
+        long data=Util(s1,s2,mincount,0,0,0);
+        return mincount;
+    }
+};
+Time complexity: O(n1*n2)
+Space complexity: O(n1*n2)
