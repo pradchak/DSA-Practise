@@ -1,0 +1,82 @@
+Longest Pallindromic Subsequence
+
+Recursive Method:
+Check if a string is a pallindrome or not at every point and then check by having that character in the string and by removing it as well. Keep on storing the maximum value thus obtained.
+
+class Solution {
+public:
+    bool check_pallindrome(string s){
+        int n=s.size();
+        for(int i=0;i<n/2;i++){
+            if(s[i]!=s[n-i-1]) return false;
+        }
+        return true;
+    }
+    int Util(string s, int &maxlen, int i){
+        int n=s.size();
+        cout<<s<<'\n';
+        
+        if(check_pallindrome(s)){
+            //sz+=n;
+            cout<<"Foung pallindrome "<<s<<" "<<maxlen<<"\n";
+            maxlen=max(maxlen, n);
+            return n;
+        }
+        if(i==n) return 0;
+        string s1=s;
+        s.erase(i,1);
+        int n1=Util(s,maxlen,i);
+        int n2=Util(s1,maxlen,i+1);
+        maxlen=max(maxlen, max(n1,n2));
+        cout<<n1<<" "<<n2<<" "<<maxlen<<"\n";
+        return max(n1,n2);
+
+        
+    }
+    int longestPalindromeSubseq(string s) {
+        int maxlen=0;
+        Util(s,maxlen,0);
+        return maxlen;
+        //return check_pallindrome("bb");
+    }
+};
+
+
+DP method
+Keep on increasing the length of the subsequence to be checked and then if the first and the last elements are equal, then add 2 to the biggest pallindromic sequence in between the two elemenets, else just take the maximum palindromic sequence without considering either the starting element or the ending element. Then iterate through the array to find the largest value.
+
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        int n=s.size();
+        int dp[n][n];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                dp[i][j]=1;
+            }
+        }
+        for(int i=0;i<n;i++) dp[i][i]=1;
+        for(int i=0;i<n-1;i++){
+            if(s[i]==s[i+1]) dp[i][i+1]=2;
+        }
+        for(int l=3;l<=n;l++){
+            for(int i=0;i<n-l+1;i++){
+                
+                int j=i+l-1;
+                //cout<<i<<" "<<j<<"\n";
+                if(s[i]==s[j]) dp[i][j]=dp[i+1][j-1]+2;
+                else dp[i][j]=max(dp[i][j-1], dp[i+1][j]);
+            }
+        }
+        
+        int max_val=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                //cout<<dp[i][j]<<" ";
+                max_val=max(max_val, dp[i][j]);
+            }
+            //cout<<"\n";
+        }
+        return max_val;
+    }
+};
